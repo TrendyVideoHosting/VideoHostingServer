@@ -27,7 +27,7 @@ class RateLimitFilter : OncePerRequestFilter() {
         ) {
             AUTHENTICATION(10),
             MODIFICATION(30),
-            HEAVY(60),
+            HEAVY(100),
             DEFAULT(500)
         }
         sealed interface AuthInfo {
