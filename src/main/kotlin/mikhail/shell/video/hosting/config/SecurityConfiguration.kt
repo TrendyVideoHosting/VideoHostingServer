@@ -1,13 +1,12 @@
 package mikhail.shell.video.hosting.config
 
 import jakarta.servlet.http.HttpServletResponse
-import mikhail.shell.video.hosting.security.JwtTokenFilter
+import mikhail.shell.video.hosting.security.JwtFilter
+import mikhail.shell.video.hosting.security.RateLimitFilter
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.security.authentication.AuthenticationManager
-import org.springframework.security.authorization.AuthorizationManager
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration
-import org.springframework.security.config.annotation.web.WebSecurityConfigurer
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
 import org.springframework.security.config.annotation.web.invoke
@@ -24,7 +23,8 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource
 @Configuration
 @EnableWebSecurity
 class SecurityConfiguration(
-    private val jwtTokenFilter: JwtTokenFilter
+    private val jwtFilter: JwtFilter,
+    private val rateLimitFilter: RateLimitFilter
 ) {
     @Bean
     fun securityFilterChain(httpSecurity: HttpSecurity): SecurityFilterChain {
@@ -35,11 +35,11 @@ class SecurityConfiguration(
             authorizeHttpRequests {
                 setOf(
                     "/api/v2/auth/**",
-                    "/api/v2/users/existence**",
+                    "/api/v2/users/existence",
                     "/docs/**",
                     "/css/**",
                     "/.well-known/assetlinks.json",
-                    "/error**"
+                    "/error"
                 ).forEach { basePath ->
                     authorize(basePath, permitAll)
                 }
@@ -53,7 +53,8 @@ class SecurityConfiguration(
                     response.sendError(HttpServletResponse.SC_FORBIDDEN)
                 }
             }
-            addFilterBefore<UsernamePasswordAuthenticationFilter>(jwtTokenFilter)
+            addFilterBefore<UsernamePasswordAuthenticationFilter>(jwtFilter)
+            addFilterAfter<JwtFilter>(rateLimitFilter)
         }
         return httpSecurity.build()
     }

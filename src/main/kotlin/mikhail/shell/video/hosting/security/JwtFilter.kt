@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component
 import org.springframework.web.filter.OncePerRequestFilter
 
 @Component
-class JwtTokenFilter @Autowired constructor(
+class JwtFilter @Autowired constructor(
     private val util: JwtTokenUtil,
     private val userRepository: UserRepository,
     private val invalidTokenRepository: InvalidTokenRepository
@@ -29,7 +29,7 @@ class JwtTokenFilter @Autowired constructor(
             if (util.validateToken(token) && !invalidTokenRepository.existsById(token)) {
                 val userId = util.extractUserId(token)
                 if (userId != null && userRepository.existsById(userId)) {
-                    val authentication = HostingToken(userId, null, listOf())
+                    val authentication = VideoHostingToken(userId, null, listOf())
                     authentication.details = WebAuthenticationDetailsSource().buildDetails(request)
                     SecurityContextHolder.getContext().authentication = authentication
                 }

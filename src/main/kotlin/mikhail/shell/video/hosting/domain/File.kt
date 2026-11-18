@@ -56,7 +56,12 @@ fun String.parseFileName(): String {
 
 fun InputStream.uploadFile(targetFile: Path): Boolean {
     return try {
-        targetFile.outputStream().use(::copyTo)
+        targetFile.outputStream().use {
+            copyTo(
+                out = it,
+                bufferSize = 256 * 1024
+            )
+        }
         true
     } catch (e: Exception) {
         e.printStackTrace()

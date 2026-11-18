@@ -10,7 +10,6 @@ plugins {
 
 application {
 	mainClass = "mikhail.shell.video.hosting.ApplicationKt"
-    applicationDefaultJvmArgs
 }
 
 group = "mikhail.shell"
@@ -43,6 +42,8 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-mail")
 	runtimeOnly("com.mysql:mysql-connector-j")
 	implementation("org.springframework.boot:spring-boot-starter-security")
+    implementation("com.bucket4j:bucket4j-core:8.7.0")
+	implementation("com.github.ben-manes.caffeine:caffeine:3.3.1")
 	implementation("org.springframework.boot:spring-boot-starter-webmvc")
     implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
 	implementation ("io.jsonwebtoken:jjwt:0.9.1")
@@ -58,7 +59,7 @@ dependencies {
 	// JAXB Runtime
 	implementation ("org.glassfish.jaxb:jaxb-runtime:2.3.1")
 
-	implementation ("com.google.firebase:firebase-admin:9.8.0")
+	implementation ("com.google.firebase:firebase-admin:9.12.0")
 
 	implementation("net.coobird:thumbnailator:0.4.8")
 
